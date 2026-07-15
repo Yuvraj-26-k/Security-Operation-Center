@@ -1,11 +1,8 @@
 import KPIGrid from "../components/dashboard/KPIGrid";
 import ThreatOverview from "../components/dashboard/ThreatOverview";
 import RecentEvents from "../components/dashboard/RecentEvents";
-import MitreMatrix from "../components/dashboard/MitreMatrix";
 
-import AttackMap from "../components/widgets/AttackMap";
-import LiveTerminal from "../components/widgets/LiveTerminal";
-import EndpointHealth from "../components/widgets/EndpointHealth";
+
 import LiveClock from "../components/widgets/LiveClock";
 
 export default function Dashboard() {
@@ -42,31 +39,16 @@ export default function Dashboard() {
 
       {/* Map + Endpoint */}
 
-      <div className="grid grid-cols-3 gap-6">
-
-        <div className="col-span-2">
-
-          <AttackMap />
-
-        </div>
-
-        <EndpointHealth />
-
-      </div>
+      
 
       {/* Feed + Terminal */}
 
-      <div className="grid grid-cols-2 gap-6">
-
-        <RecentEvents />
-
-        <LiveTerminal />
-
-      </div>
+      
+      <RecentEvents />
 
       {/* MITRE */}
 
-      <MitreMatrix />
+     
 
     </div>
   );
