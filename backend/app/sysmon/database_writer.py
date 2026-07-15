@@ -1,6 +1,7 @@
 from app.database.db import SessionLocal
 from app.models.event import Event
 from app.sysmon.ingest import ingestor
+from datetime import datetime
 
 
 class SysmonDatabaseWriter:
@@ -70,6 +71,8 @@ class SysmonDatabaseWriter:
                   continue
 
                 event = Event(
+                    
+                    timestamp=datetime.now().astimezone(),
 
                     source_ip="LOCALHOST",
 

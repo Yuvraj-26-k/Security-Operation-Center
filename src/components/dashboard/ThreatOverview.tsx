@@ -22,32 +22,34 @@ export default function ThreatOverview() {
   const [chartData, setChartData] =
     useState<ChartPoint[]>([]);
 
-  useEffect(() => {
-    if (!overview) return;
+   useEffect(() => {
 
-    const total =
-      overview.critical +
-      overview.high +
-      overview.medium +
-      overview.low;
+  if (!overview) return;
 
-    const now = new Date();
+  const now = new Date();
 
-    setChartData((previous) => {
-      const updated = [
-        ...previous,
-        {
-          time: now.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          threats: total,
-        },
-      ];
+  const point = {
+    time: now.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    }),
+    threats: overview.events_per_minute,
+  };
 
-      return updated.slice(-20);
-    });
-  }, [overview]);
+  setChartData((previous) => {
+
+    if (
+      previous.length > 0 &&
+      previous[previous.length - 1].time === point.time
+    ) {
+      return previous;
+    }
+
+    return [...previous.slice(-19), point];
+  });
+
+}, [overview]);
 
   if (!overview) {
     return (
@@ -121,11 +123,12 @@ export default function ThreatOverview() {
               <CartesianGrid stroke="#233044" />
 
               <XAxis
-                dataKey="time"
-                stroke="#94a3b8"
-              />
+  dataKey="time"
+  stroke="#94a3b8"
+  tick={{ fill: "#94a3b8", fontSize: 11 }}
+/>
 
-              <Tooltip />
+             
 
               <Area
                 type="monotone"
