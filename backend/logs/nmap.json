@@ -1,0 +1,8 @@
+[
+  {
+    "type": "Port Scan",
+    "source_ip": "192.168.1.50",
+    "destination_ip": "192.168.1.20",
+    "port": 22
+  }
+]
