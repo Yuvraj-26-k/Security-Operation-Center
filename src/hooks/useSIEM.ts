@@ -12,7 +12,7 @@ export default function useSIEM() {
 
   const [securityScore, setSecurityScore] = useState(0);
 
-  const [onlineEndpoints, setOnlineEndpoints] = useState(247);
+  const [onlineEndpoints] = useState(247);
 
   useEffect(() => {
 
