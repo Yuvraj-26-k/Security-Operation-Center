@@ -1,242 +1,90 @@
-# 🛡️ SentinelSOC – Security Operation Center Dashboard
+# SentinelSOC · Security Operation Center
 
-A modern Security Operation Center (SOC) dashboard built using **React**, **FastAPI**, **SQLite**, and **Sysmon**. The project monitors Windows Sysmon events, detects suspicious activities such as **Nmap port scans**, stores them in a database, and visualizes them through a live dashboard.
+**A local learning prototype for Sysmon events, detection rules and a SOC dashboard.**
 
----
+React/TypeScript presents event and dashboard data from a Python FastAPI backend
+with SQLite storage. This is a portfolio lab, not an enterprise SIEM or a
+production-ready security service.
 
-## 📸 Preview
+## Implemented versus planned
 
-> Add screenshots here after uploading.
+| Area | Current scope |
+| --- | --- |
+| Event ingestion | Windows Sysmon-oriented readers and event processing |
+| Detection | Rules including a log-text check for `nmap.exe`; tool execution is not proof of a remote scan |
+| Dashboard | Event/statistics APIs and React views |
+| Authentication | Registration/login code exists, but authorization/defaults need hardening |
+| Attack map | Includes randomly generated demonstration events, not a global live threat feed |
+| Additional routes/widgets | Some are empty stubs; filenames do not establish implemented features |
 
-```
-Dashboard
-Alerts
-Logs
-Threat Activity
-MITRE ATT&CK Mapping
-Live Event Feed
-```
+## Local setup
 
----
+Use a disposable local Windows lab for Sysmon functionality. Install Git,
+Python with virtual-environment support, and Node.js/npm. Start from:
 
-# ✨ Features
-
-- ✅ Real-time Windows Sysmon event monitoring
-- ✅ Automatic Nmap Port Scan detection
-- ✅ Live Security Dashboard
-- ✅ Alert Management
-- ✅ Security Logs
-- ✅ Incident Overview
-- ✅ Threat Activity Graph
-- ✅ MITRE ATT&CK Mapping
-- ✅ SQLite Event Storage
-- ✅ REST API using FastAPI
-- ✅ Modern React + Tailwind CSS Interface
-- ✅ Live Dashboard Updates
-
----
-
-# 🛠 Tech Stack
-
-## Frontend
-
-- React
-- TypeScript
-- Tailwind CSS
-- Recharts
-- Lucide Icons
-- Axios
-
-## Backend
-
-- FastAPI
-- SQLAlchemy
-- SQLite
-- Uvicorn
-
-## Detection
-
-- Microsoft Sysmon
-- Windows Event Log API
-- Python
-
----
-
-# 📂 Project Structure
-
-```
-Security-Operation-Center
-│
-├── backend
-│   ├── app
-│   ├── database
-│   ├── models
-│   ├── routes
-│   ├── sysmon
-│   └── main.py
-│
-├── src
-│   ├── components
-│   ├── pages
-│   ├── hooks
-│   ├── services1.0
-│   └── api
-│
-└── README.md
-```
-
----
-
-# ⚙️ Installation
-
-## Clone Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/Security-Operation-Center.git
-
+```sh
+git clone https://github.com/Yuvraj-26-k/Security-Operation-Center.git
 cd Security-Operation-Center
 ```
 
----
+Backend, in a Windows terminal:
 
-## Backend
-
-```bash
+```powershell
 cd backend
-
-python -m venv .venv
-
-.venv\Scripts\activate
-
-pip install -r requirements.txt
-
-uvicorn app.main:app --reload
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install pywin32
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
----
+Sysmon must already be installed/configured, and the running account needs
+permission to read its logs. The Python Windows-event API comes from `pywin32`.
+Do not install/configure system telemetry merely by following a screenshot.
 
-## Frontend
+Frontend, in a second terminal at the repository root:
 
-```bash
-npm install
-
-npm run dev
+```sh
+npm ci
+npm run dev -- --host 127.0.0.1
 ```
 
----
+Use the local address printed by Vite. `/health` on the backend is a basic
+process check, not verification that ingestion or all dashboard views work.
+These commands reflect the tracked entry points; a clean Windows end-to-end
+setup still requires verification.
 
-# 🚀 How It Works
+## Architecture
 
-1. Windows Sysmon records process creation events.
-2. Python reads Sysmon Event Logs.
-3. Events are parsed.
-4. Nmap executions are detected.
-5. Alerts are stored in SQLite.
-6. FastAPI exposes REST APIs.
-7. React fetches live data.
-8. Dashboard updates automatically.
-
----
-
-# 🔍 Detection Rules
-
-Currently implemented:
-
-| Tool | Detection |
-|------|-----------|
-| Nmap | Port Scan Detection |
-
-Example Detection
-
-```
-"C:\Program Files (x86)\Nmap\nmap.exe"
+```mermaid
+flowchart LR
+    Sysmon[Windows Sysmon] --> Reader[Python readers and rules]
+    Reader --> DB[(SQLite)]
+    DB --> API[FastAPI local API]
+    API --> UI[React dashboard]
+    Demo[Simulated attack-map generator] --> UI
 ```
 
-Mapped to
+The diagram is conceptual: inspect the active `backend/app/main.py` path before
+extending older/alternate modules. Keep simulated data visibly separate.
 
-```
-MITRE ATT&CK
+## Security and data limitations
 
-Tactic:
-Discovery
+Keep the backend bound to loopback and use synthetic data. The reviewed
+registration path assigns administrator/superuser attributes, the JWT signing
+key is a hardcoded placeholder, and event/dashboard/WebSocket routes need an
+authentication review. CORS configuration also needs a deliberate origin policy.
+Do not expose this build publicly or use it with real client telemetry.
 
-Technique:
-T1046
-Network Service Discovery
-```
+The tracked `.env` is empty and the audited database tables were empty. Runtime
+databases/logs can later contain user and host information. The repository also
+contains bytecode, an app ZIP and inactive stubs; documentation does not fix or
+remove those artifacts.
 
----
+## Validation and roadmap
 
-# 📊 Dashboard
-
-The dashboard displays
-
-- Total Events
-- Critical Alerts
-- High Alerts
-- Medium Alerts
-- Events per Minute
-- Security Score
-- Protected Endpoints
-- Active Threats
-- Threat Activity
-- Recent Events
-
----
-
-# 🗄 Database
-
-SQLite stores
-
-- Timestamp
-- Event Type
-- Severity
-- Process Name
-- Username
-- MITRE Mapping
-- Risk Score
-- Description
-
----
-
-# 📌 Future Improvements
-
-- Additional Detection Rules
-- PowerShell Detection
-- Mimikatz Detection
-- Hydra Detection
-- SQLMap Detection
-- GeoIP Integration
-- Email Notifications
-- User Authentication
-- Threat Intelligence Feed
-- Malware Analysis
-- Docker Deployment
-
----
-
-# ⚠ Disclaimer
-
-This project was developed for educational and learning purposes. It demonstrates SOC concepts using Windows Sysmon and does not replace a production SIEM or enterprise Security Operations Center.
-
----
-
-# 👨‍💻 Author
-
-**Yuvraj Singh**
-
-Cybersecurity Student
-
-Interested in
-
-- Penetration Testing
-- SOC Analysis
-- Threat Detection
-- Digital Forensics
-- Python Automation
-
----
-
-# ⭐ If you like this project
-
-Give the repository a ⭐ on GitHub.
+`npm run build` and `npm run lint` are available in the frontend package.
+No first-party automated test suite is currently tracked. The documentation
+update does not certify a working deployment. Priorities: fix security defaults,
+establish one active backend path, add deterministic ingestion/API tests and
+record a sanitized end-to-end demo. No verified dashboard screenshot is
+included; the decorative hero asset is not presented as one.
